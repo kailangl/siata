@@ -1,0 +1,44 @@
+{
+  "entities": {
+    "Poem": {
+      "title": "Poem",
+      "description": "A collection of verses and poems.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "tags": { 
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "authorId": { "type": "string" }
+      },
+      "required": ["title", "content", "date", "tags"]
+    },
+    "Book": {
+      "title": "Book",
+      "description": "A book project or completed work.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["writing", "completed", "planning"] },
+        "coverGradient": { "type": "string" },
+        "link": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "description", "status"]
+    }
+  },
+  "firestore": {
+    "/poems": {
+      "schema": "Poem",
+      "description": "Public poems list."
+    },
+    "/books": {
+      "schema": "Book",
+      "description": "Projects and published books."
+    }
+  }
+}

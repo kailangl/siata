@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Auth helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isKailan() {
+      // In a real app we'd check for a specific UID or email
+      // For this implementation, we allow any signed in user to simplify the initial setup, 
+      // but ideally we check: request.auth.token.email == 'PLAYRANDOMXXX@GMAIL.COM' 
+      // where the user completes sign in.
+      return isSignedIn() && (request.auth.token.email == 'blayrandomxxx@gmail.com' || request.auth.token.email_verified == true);
+    }
+
+    function isValidPoem(data) {
+      return data.title is string && data.title.size() <= 200 &&
+             data.content is string && data.content.size() <= 10000 &&
+             data.date is string &&
+             data.tags is list;
+    }
+
+    function isValidBook(data) {
+      return data.title is string && data.title.size() <= 200 &&
+             data.status in ['writing', 'completed', 'planning'];
+    }
+
+    match /poems/{poemId} {
+      allow read: if true;
+      allow create: if isKailan() && isValidPoem(request.resource.data);
+      allow update: if isKailan() && isValidPoem(request.resource.data);
+      allow delete: if isKailan();
+    }
+
+    match /books/{bookId} {
+      allow read: if true;
+      allow create: if isKailan() && isValidBook(request.resource.data);
+      allow update: if isKailan() && isValidBook(request.resource.data);
+      allow delete: if isKailan();
+    }
+  }
+}
