@@ -125,7 +125,7 @@ const Navbar = ({ activeTab, setActiveTab }: { activeTab: Tab; setActiveTab: (ta
           <Bell className="text-white w-6 h-6" />
         </div>
         <div>
-          <h1 className="text-lg md:text-xl font-serif italic tracking-wider text-glow leading-none">A Biblioteca Etérea</h1>
+          <h1 className="text-lg md:text-xl font-serif italic tracking-wider text-glow leading-none">A Biblioteca Extra-Lúcida</h1>
           <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em] mt-1 ml-1">Kailan G. Lima</p>
         </div>
       </motion.div>
@@ -178,9 +178,9 @@ const Navbar = ({ activeTab, setActiveTab }: { activeTab: Tab; setActiveTab: (ta
 
 const CLASSICAL_TRACKS = [
   {
-    title: "Gymnopédie No. 1",
-    author: "Erik Satie",
-    url: "https://www.mfiles.co.uk/mp3-downloads/erik-satie-gymnopedie-1.mp3"
+    title: "Fur Elise",
+    author: "Beethoven",
+    url: "https://www.mfiles.co.uk/mp3-downloads/fur-elise.mp3"
   },
   {
     title: "Clair de Lune",
@@ -190,17 +190,22 @@ const CLASSICAL_TRACKS = [
   {
     title: "Moonlight Sonata",
     author: "Beethoven",
-    url: "https://www.mfiles.co.uk/mp3-downloads/beethoven-sonata-op27-no2-moonlight-1.mp3"
-  },
-  {
-    title: "Cello Suite No. 1",
-    author: "J.S. Bach",
-    url: "https://www.mfiles.co.uk/mp3-downloads/bach-cello-suite-1-prelude.mp3"
+    url: "https://www.mfiles.co.uk/mp3-downloads/moonlight-movement1.mp3"
   },
   {
     title: "Nocturne Op. 9 No. 2",
     author: "Chopin",
     url: "https://www.mfiles.co.uk/mp3-downloads/chopin-nocturne-op9-no2.mp3"
+  },
+  {
+    title: "Canon in D",
+    author: "Johann Pachelbel",
+    url: "https://www.mfiles.co.uk/mp3-downloads/pachelbels-canon-arranged.mp3"
+  },
+  {
+    title: "Liebestraum",
+    author: "Franz Liszt",
+  url: "https://www.mfiles.co.uk/mp3-downloads/franz-liszt-liebestraum-3.mp3"
   }
 ];
 
@@ -309,7 +314,7 @@ const MusicPlayer = () => {
           "w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all border",
           isExpanded 
             ? "bg-slate-900 border-white/10 text-white" 
-            : "bg-gradient-to-br from-purple-600 to-blue-600 border-white/20 text-white shadow-purple-500/20"
+            : "bg-linear-to-br from-purple-600 to-blue-600 border-white/20 text-white shadow-purple-500/20"
         )}
       >
         <AnimatePresence mode="wait">
@@ -352,8 +357,8 @@ const VersosPage = ({ poems, onPoemSelect }: { poems: Poem[]; onPoemSelect: (p: 
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-12">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div className="max-w-2xl">
-          <h2 className="text-4xl md:text-7xl font-serif mb-6 leading-tight">Fragmentos de <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 italic">Alma e Som</span></h2>
-          <p className="text-slate-400 text-base md:text-lg leading-relaxed font-light">Uma coleção de pensamentos capturados no limiar entre o que somos e o que ousamos imaginar. Cada palavra de Kailan G. Lima é um degrau na escada do invisível.</p>
+          <h2 className="text-4xl md:text-7xl font-serif mb-6 leading-tight">Autenticidade <br/><span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-blue-400 italic">Dinâmica</span></h2>
+          <p className="text-slate-400 text-base md:text-lg leading-relaxed font-light">Uma coleção de pensamentos capturados no limiar entre o que somos e o que ousamos imaginar.</p>
         </div>
         
         <div className="w-full md:w-80 group">
@@ -414,7 +419,7 @@ const BibliotecaPage = ({ books }: { books: BookEntity[] }) => (
     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
       <div>
         <h2 className="text-4xl md:text-5xl font-serif mb-4 italic">Futuras <span className="text-blue-400">Obras</span></h2>
-        <p className="text-slate-400 font-light">Mundos sob construção na mente de Kailan.</p>
+        <p className="text-slate-400 font-light">Mundos sob construção...</p>
       </div>
       <Scroll className="text-slate-800 w-12 h-12 hidden md:block" />
     </div>
@@ -808,7 +813,7 @@ export default function App() {
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
           <button onClick={() => window.location.pathname = '/private'} className="text-slate-500 hover:text-white transition-colors text-[10px] uppercase tracking-widest font-bold">Acesso Admin</button>
           <div className="w-1 h-1 bg-slate-800 rounded-full hidden md:block" />
-          <div className="text-slate-400 font-serif italic text-xs md:text-sm">"Para as estrelas, através das sombras"</div>
+          <div className="text-slate-400 font-serif italic text-xs md:text-sm">"O sentido é uma variável não operacional."</div>
         </div>
       </footer>
 
