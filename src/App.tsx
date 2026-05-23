@@ -104,50 +104,95 @@ const PHILOSOPHY_SECTIONS = [
 // --- Components ---
 
 const SocialLinks = ({ className }: { className?: string }) => (
-  <div className={cn("flex items-center gap-4", className)}>
-    <button className="p-2 text-slate-400 hover:text-white transition-colors">
-      <Twitter className="w-5 h-5" />
-    </button>
-    <button className="p-2 text-slate-400 hover:text-white transition-colors">
-      <Instagram className="w-5 h-5" />
-    </button>
+  <div className={cn("flex items-center gap-2", className)}>
+    <a 
+      href="https://twitter.com" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="p-2 text-slate-400 hover:text-purple-400 hover:bg-white/5 rounded-full transition-all duration-300 hover:scale-110 active:scale-95"
+    >
+      <Twitter className="w-4 h-4" />
+    </a>
+    <a 
+      href="https://instagram.com" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="p-2 text-slate-400 hover:text-purple-400 hover:bg-white/5 rounded-full transition-all duration-300 hover:scale-110 active:scale-95"
+    >
+      <Instagram className="w-4 h-4" />
+    </a>
   </div>
 );
 
 const Navbar = ({ activeTab, setActiveTab }: { activeTab: Tab; setActiveTab: (tab: Tab) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const tabs: Tab[] = ['versos', 'filosofia', 'biblioteca'];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="relative z-50 p-6 md:p-8 flex items-center justify-between">
-      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center p-2 shadow-lg shadow-purple-500/20">
-          <Bell className="text-white w-6 h-6" />
-        </div>
-        <div>
-          <h1 className="text-lg md:text-xl font-serif italic tracking-wider text-glow leading-none">A Biblioteca Extra-Lúcida</h1>
-          <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em] mt-1 ml-1">Kailan G. Lima</p>
-        </div>
-      </motion.div>
+    <header className={cn(
+      "fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center",
+      scrolled 
+        ? "bg-slate-950/70 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 shadow-lg shadow-purple-500/5" 
+        : "bg-transparent py-6 px-6 md:px-12 md:py-8"
+    )}>
+      <div className="w-full max-w-7xl flex items-center justify-between">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }} 
+          animate={{ opacity: 1, x: 0 }} 
+          className="flex items-center gap-3 cursor-pointer group"
+          onClick={() => setActiveTab('versos')}
+        >
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center p-2 shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40 group-hover:scale-105 transition-all duration-300">
+            <Scroll className="text-white w-5 h-5 group-hover:rotate-6 transition-transform duration-300" />
+          </div>
+          <div>
+            <h1 className="text-base md:text-xl font-serif italic tracking-wider text-glow leading-none group-hover:text-purple-300 transition-colors duration-300">
+              A Biblioteca Extra-Lúcida
+            </h1>
+            <p className="text-[9px] text-slate-500 uppercase tracking-[0.3em] mt-1 ml-1 group-hover:text-slate-400 transition-colors duration-300">
+              Kailan G. Lima
+            </p>
+          </div>
+        </motion.div>
 
-      <nav className="hidden md:flex items-center gap-8 text-sm uppercase tracking-[0.2em] font-medium text-slate-400">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={cn("relative py-2 transition-colors hover:text-white", activeTab === tab && "text-white")}
-          >
-            {tab}
-            {activeTab === tab && (
-              <motion.div layoutId="nav_underline" className="absolute bottom-0 left-0 right-0 h-[1px] bg-purple-500" />
-            )}
+        <nav className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 p-1 rounded-full relative backdrop-blur-md">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={cn(
+                "relative px-6 py-2 rounded-full text-xs font-medium uppercase tracking-[0.2em] transition-colors duration-300 cursor-pointer",
+                activeTab === tab ? "text-white" : "text-slate-400 hover:text-slate-200"
+              )}
+            >
+              <span className="relative z-20">{tab}</span>
+              {activeTab === tab && (
+                <motion.div 
+                  layoutId="nav_active_pill" 
+                  className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/20 rounded-full z-10"
+                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-4">
+          <SocialLinks className="hidden md:flex" />
+          <button className="md:hidden p-2 text-slate-400 hover:text-white transition-colors" onClick={() => setIsOpen(true)}>
+            <Menu className="w-6 h-6" />
           </button>
-        ))}
-      </nav>
-
-      <button className="md:hidden p-2 text-slate-400 hover:text-white transition-colors" onClick={() => setIsOpen(true)}>
-        <Menu className="w-6 h-6" />
-      </button>
+        </div>
+      </div>
 
       <AnimatePresence>
         {isOpen && (
@@ -168,11 +213,10 @@ const Navbar = ({ activeTab, setActiveTab }: { activeTab: Tab; setActiveTab: (ta
           </>
         )}
       </AnimatePresence>
-
-      <SocialLinks className="hidden md:flex" />
     </header>
   );
 };
+
 
 // ... inside constants or top level ...
 
@@ -458,7 +502,6 @@ const AdminPage = () => {
   const [user, setUser] = useState<any>(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isUnlocked, setIsUnlocked] = useState(false);
   const [mode, setMode] = useState<'poems' | 'books'>('poems');
   const [loading, setLoading] = useState(false);
 
@@ -478,23 +521,19 @@ const AdminPage = () => {
     return unsub;
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === 'kailan_adm' && password === 'kailan2508ad') {
-       setIsUnlocked(true);
-    } else {
-      alert('Credenciais inválidas');
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
+    if (!username || !password) return;
+    setLoading(true);
     try {
-      await signInWithPopup(auth, provider);
+      // Map 'kailan_adm' to 'blayrandomxxx@gmail.com' for Firebase email authentication
+      const email = username === 'kailan_adm' ? 'blayrandomxxx@gmail.com' : username;
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (e) {
       console.error(e);
-      alert('Erro ao autenticar com Google. Verifique sua conexão.');
+      alert('Erro ao autenticar: ' + (e as Error).message);
     }
+    setLoading(false);
   };
 
   const publishPoem = async () => {
@@ -505,13 +544,16 @@ const AdminPage = () => {
       await addDoc(collection(db, 'poems'), {
         title: poemTitle,
         content: poemContent,
-        tags: poemTags.split(',').map(t => t.trim()),
+        tags: poemTags ? poemTags.split(',').map(t => t.trim()).filter(Boolean) : [],
         date: targetDate.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }),
         createdAt: targetDate.toISOString()
       });
       setPoemTitle(''); setPoemContent(''); setPoemTags(''); setPoemCustomDate('');
       alert('Poesia publicada!');
-    } catch (e) { console.error(e); }
+    } catch (e) { 
+      console.error(e);
+      alert('Erro ao publicar poesia: ' + (e as Error).message);
+    }
     setLoading(false);
   };
 
@@ -527,11 +569,15 @@ const AdminPage = () => {
       });
       setBookTitle(''); setBookDesc('');
       alert('Obra publicada!');
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+      alert('Erro ao publicar obra: ' + (e as Error).message);
+    }
     setLoading(false);
   };
 
-  if (!isUnlocked) {
+  // If not authenticated with Firebase, show login form
+  if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <form onSubmit={handleLogin} className="glass p-8 w-full max-w-md space-y-6">
@@ -542,40 +588,37 @@ const AdminPage = () => {
           </div>
           <div className="space-y-4">
             <input 
-              type="text" placeholder="Usuário" value={username} onChange={e => setUsername(e.target.value)}
+              type="text" 
+              placeholder="Usuário ou E-mail" 
+              value={username} 
+              onChange={e => setUsername(e.target.value)}
               className="w-full bg-slate-900 border border-white/10 p-4 rounded-xl text-white focus:border-purple-500 transition-colors outline-none"
             />
             <input 
-              type="password" placeholder="Senha" value={password} onChange={e => setPassword(e.target.value)}
+              type="password" 
+              placeholder="Senha" 
+              value={password} 
+              onChange={e => setPassword(e.target.value)}
               className="w-full bg-slate-900 border border-white/10 p-4 rounded-xl text-white focus:border-purple-500 transition-colors outline-none"
             />
           </div>
-          <button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 p-4 rounded-xl font-bold text-white transition-all shadow-lg shadow-purple-500/20 active:scale-95">
-            Desbloquear Painel
-          </button>
-        </form>
-      </div>
-    );
-  }
-
-  // If unlocked but not authenticated with Firebase
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="glass p-8 w-full max-w-md space-y-8 text-center">
-          <div className="space-y-2">
-            <Sparkles className="w-10 h-10 text-purple-400 mx-auto" />
-            <h2 className="text-2xl font-serif italic text-white text-glow">Autenticação de Dados</h2>
-            <p className="text-slate-400 text-sm font-light">Para gravar informações no banco de dados, você precisa se conectar com sua conta Google configurada.</p>
-          </div>
           <button 
-            onClick={handleGoogleSignIn}
-            className="w-full bg-white text-slate-900 p-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-slate-100 transition-all active:scale-95"
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 p-4 rounded-xl font-bold text-white transition-all shadow-lg shadow-purple-500/20 active:scale-95 cursor-pointer disabled:opacity-50"
           >
-            <Github className="w-5 h-5" /> Entrar com Google
+            {loading ? 'Autenticando...' : 'Desbloquear Painel'}
           </button>
-          <button onClick={() => setIsUnlocked(false)} className="text-slate-500 text-xs uppercase tracking-widest hover:text-white transition-colors">Voltar</button>
-        </div>
+          <div className="text-center pt-2">
+            <button 
+              type="button"
+              onClick={() => window.location.hash = ''} 
+              className="text-slate-500 text-xs uppercase tracking-widest hover:text-white transition-colors cursor-pointer"
+            >
+              Voltar ao Santuário
+            </button>
+          </div>
+        </form>
       </div>
     );
   }
@@ -584,8 +627,12 @@ const AdminPage = () => {
     <div className="min-h-screen p-6 md:p-12 max-w-4xl mx-auto space-y-12">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full border border-purple-500/50 p-1">
-             <img src={user.photoURL} alt="" className="w-full h-full rounded-full" />
+          <div className="w-10 h-10 rounded-full border border-purple-500/50 p-1 flex items-center justify-center bg-slate-800">
+             {user.photoURL ? (
+               <img src={user.photoURL} alt="" className="w-full h-full rounded-full" />
+             ) : (
+               <Sparkles className="text-purple-400 w-5 h-5" />
+             )}
           </div>
           <div>
             <h2 className="text-2xl font-serif italic text-white flex items-center gap-3">
@@ -595,9 +642,9 @@ const AdminPage = () => {
           </div>
         </div>
         <div className="flex bg-white/5 p-1 rounded-xl border border-white/5">
-          <button onClick={() => setMode('poems')} className={cn("px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all", mode === 'poems' ? "bg-purple-600 text-white shadow-lg shadow-purple-500/20" : "text-slate-500 hover:text-slate-300")}>Poesias</button>
-          <button onClick={() => setMode('books')} className={cn("px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all", mode === 'books' ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20" : "text-slate-500 hover:text-slate-300")}>Obras</button>
-          <button onClick={() => signOut(auth)} className="ml-2 px-3 py-2 text-slate-500 hover:text-red-400 transition-colors"><Trash2 className="w-4 h-4" /></button>
+          <button onClick={() => setMode('poems')} className={cn("px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer", mode === 'poems' ? "bg-purple-600 text-white shadow-lg shadow-purple-500/20" : "text-slate-500 hover:text-slate-300")}>Poesias</button>
+          <button onClick={() => setMode('books')} className={cn("px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer", mode === 'books' ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20" : "text-slate-500 hover:text-slate-300")}>Obras</button>
+          <button onClick={() => signOut(auth)} className="ml-2 px-3 py-2 text-slate-500 hover:text-red-400 transition-colors cursor-pointer"><Trash2 className="w-4 h-4" /></button>
         </div>
       </div>
 
@@ -622,7 +669,7 @@ const AdminPage = () => {
                 <textarea placeholder="O silêncio ecoou..." value={poemContent} onChange={e => setPoemContent(e.target.value)} className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-white h-80 font-serif text-lg focus:border-purple-500/50 outline-none transition-all resize-none" />
               </div>
             </div>
-            <button onClick={publishPoem} disabled={loading} className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 p-5 rounded-2xl font-black uppercase text-xs tracking-[0.3em] flex items-center justify-center gap-3 transition-all shadow-xl shadow-purple-900/20 active:scale-[0.98]">
+            <button onClick={publishPoem} disabled={loading} className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 p-5 rounded-2xl font-black uppercase text-xs tracking-[0.3em] flex items-center justify-center gap-3 transition-all shadow-xl shadow-purple-900/20 active:scale-[0.98] cursor-pointer">
               {loading ? 'Transmutando Dados...' : <><Send className="w-5 h-5" /> Publicar no Éter</>}
             </button>
           </>
@@ -646,7 +693,7 @@ const AdminPage = () => {
                 <textarea placeholder="Markdown description..." value={bookDesc} onChange={e => setBookDesc(e.target.value)} className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-white h-56 font-light focus:border-blue-500/50 outline-none resize-none" />
               </div>
             </div>
-            <button onClick={publishBook} disabled={loading} className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 p-5 rounded-2xl font-black uppercase text-xs tracking-[0.3em] flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-900/20 active:scale-[0.98]">
+            <button onClick={publishBook} disabled={loading} className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 p-5 rounded-2xl font-black uppercase text-xs tracking-[0.3em] flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-900/20 active:scale-[0.98] cursor-pointer">
                {loading ? 'Sincronizando...' : <><Book className="w-5 h-5" /> Registrar na Biblioteca</>}
             </button>
           </>
@@ -654,7 +701,7 @@ const AdminPage = () => {
       </motion.div>
 
       <div className="text-center pt-8">
-        <button onClick={() => window.location.pathname = '/'} className="group flex items-center gap-2 mx-auto text-slate-500 hover:text-white transition-colors text-[10px] uppercase tracking-widest font-bold">
+        <button onClick={() => window.location.hash = ''} className="group flex items-center gap-2 mx-auto text-slate-500 hover:text-white transition-colors text-[10px] uppercase tracking-widest font-bold cursor-pointer">
            <X className="w-4 h-4 group-hover:rotate-90 transition-transform" /> Voltar ao Santuário
         </button>
       </div>
@@ -665,18 +712,24 @@ const AdminPage = () => {
 // --- Main App Logic ---
 
 export default function App() {
-  const [isPrivate, setIsPrivate] = useState(window.location.pathname === '/private');
+  const [isPrivate, setIsPrivate] = useState(window.location.hash === '#/private');
   const [poems, setPoems] = useState<Poem[]>([]);
   const [books, setBooks] = useState<BookEntity[]>([]);
   const [selectedPoem, setSelectedPoem] = useState<Poem | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>('versos');
   const [activePhilosSection, setActivePhilosSection] = useState(PHILOSOPHY_SECTIONS[0].id);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const philisSectionScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
     window.addEventListener('mousemove', handleMouseMove);
     
+    const handleHashChange = () => {
+      setIsPrivate(window.location.hash === '#/private');
+    };
+    window.addEventListener('hashchange', handleHashChange);
+
     // Firestore setup
     const qPoems = query(collection(db, 'poems'), orderBy('createdAt', 'desc'));
     const unsubPoems = onSnapshot(qPoems, (snap) => {
@@ -690,9 +743,44 @@ export default function App() {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('hashchange', handleHashChange);
       unsubPoems();
       unsubBooks();
     };
+  }, []);
+
+  // Auto-select philosophy section based on scroll position
+  useEffect(() => {
+    const scrollContainer = philisSectionScrollRef.current;
+    if (!scrollContainer) return;
+
+    const handlePhilosophyScroll = () => {
+      const container = philisSectionScrollRef.current;
+      if (!container) return;
+
+      const containerCenter = container.scrollLeft + container.clientWidth / 2;
+      const buttons = container.querySelectorAll('[data-section-id]');
+      
+      let closest: { section: string; distance: number } = {
+        section: PHILOSOPHY_SECTIONS[0].id,
+        distance: Infinity
+      };
+
+      buttons.forEach((button) => {
+        const sectionId = button.getAttribute('data-section-id');
+        const buttonCenter = button.offsetLeft + button.clientWidth / 2;
+        const distance = Math.abs(containerCenter - buttonCenter);
+
+        if (distance < closest.distance) {
+          closest = { section: sectionId || PHILOSOPHY_SECTIONS[0].id, distance };
+        }
+      });
+
+      setActivePhilosSection(closest.section);
+    };
+
+    scrollContainer.addEventListener('scroll', handlePhilosophyScroll, { passive: true });
+    return () => scrollContainer.removeEventListener('scroll', handlePhilosophyScroll);
   }, []);
 
   if (isPrivate) {
@@ -712,34 +800,63 @@ export default function App() {
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
       <MusicPlayer />
 
-      <main className="relative z-10 flex-1 container mx-auto px-6 py-12 md:py-16">
+      <main className="relative z-10 flex-1 container mx-auto px-6 pt-28 pb-12 md:pt-36 md:pb-16">
         <AnimatePresence mode="wait">
           {activeTab === 'versos' && <VersosPage poems={poems} onPoemSelect={setSelectedPoem} />}
           {activeTab === 'filosofia' && (
             <motion.div key="filosofia" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="max-w-7xl mx-auto py-4">
               <div className="space-y-8">
+                {/* Mobile Header */}
+                <div className="lg:hidden mb-6">
+                  <h2 className="text-3xl md:text-4xl font-serif italic text-glow text-white mb-2">Autenticidade Dinâmica</h2>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-widest border-b border-white/5 pb-3">Estrutura Operacional</p>
+                </div>
+
+                {/* Mobile Scroll Instruction and Indicators */}
+                <div className="lg:hidden">
+                  <div className="bg-white/5 border border-purple-500/30 rounded-lg p-3 mb-4 flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 text-purple-400 animate-pulse" />
+                    <span className="text-xs text-purple-300 font-medium">Deslize para ver os 6 tópicos</span>
+                  </div>
+                  {/* Slide Indicators */}
+                  <div className="flex items-center justify-center gap-1.5">
+                    {PHILOSOPHY_SECTIONS.map((section) => (
+                      <motion.div
+                        key={section.id}
+                        animate={{ 
+                          scale: activePhilosSection === section.id ? 1.3 : 1,
+                          backgroundColor: activePhilosSection === section.id ? '#a78bfa' : '#64748b'
+                        }}
+                        className="w-1.5 h-1.5 rounded-full cursor-pointer transition-all"
+                        onClick={() => setActivePhilosSection(section.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+
                 <div className="flex flex-col lg:flex-row gap-8">
-                  <div className="w-full lg:w-64 flex lg:flex-col overflow-x-auto lg:overflow-x-visible flex-shrink-0 space-x-2 lg:space-x-0 lg:space-y-2 pb-4 lg:pb-0 scrollbar-hide snap-x">
+                  <div ref={philisSectionScrollRef} className="w-full lg:w-64 flex lg:flex-col overflow-x-auto lg:overflow-x-visible flex-shrink-0 space-x-2 lg:space-x-0 lg:space-y-2 pb-4 lg:pb-0 scrollbar-hide snap-x relative">
+
                     <div className="hidden lg:block mb-8 pl-4">
                       <h2 className="text-2xl font-serif italic text-glow text-white">Autenticidade Dinâmica</h2>
                       <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-2 border-t border-white/5 pt-2">Estrutura Operacional</p>
                     </div>
                     {PHILOSOPHY_SECTIONS.map((section) => (
                       <button
-                        key={section.id} 
+                        key={section.id}
+                        data-section-id={section.id}
                         onClick={() => {
                           setActivePhilosSection(section.id);
-                          // Optional: scroll into view on mobile
                         }}
                         className={cn(
-                          "whitespace-nowrap flex-shrink-0 lg:w-full text-left p-4 rounded-lg transition-all flex items-center gap-3 group snap-start", 
+                          "whitespace-nowrap flex-shrink-0 lg:w-full text-left p-3 md:p-4 rounded-lg transition-all flex items-center gap-3 group snap-start cursor-pointer border", 
                           activePhilosSection === section.id 
-                            ? 'bg-white/10 text-white border border-white/10 shadow-lg shadow-purple-500/5' 
-                            : 'text-slate-500 hover:bg-white/5 hover:text-slate-300'
+                            ? 'bg-white/10 text-white border-white/10 shadow-lg shadow-purple-500/5' 
+                            : 'text-slate-500 hover:bg-white/5 hover:text-slate-300 border-transparent hover:border-white/5'
                         )}
                       >
-                        <span className={cn("transition-transform group-hover:scale-110", activePhilosSection === section.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100')}>{section.icon}</span>
-                        <span className="text-[10px] md:text-xs uppercase tracking-widest font-bold">{section.title.split(' / ')[1]}</span>
+                        <span className={cn("transition-transform group-hover:scale-110 flex-shrink-0", activePhilosSection === section.id ? 'opacity-100' : 'opacity-40 group-hover:opacity-100')}>{section.icon}</span>
+                        <span className="text-[10px] md:text-xs uppercase tracking-widest font-bold line-clamp-2">{section.title.split(' / ')[1]}</span>
                       </button>
                     ))}
                   </div>
@@ -751,7 +868,7 @@ export default function App() {
                               initial={{ opacity: 0, x: 20 }} 
                               animate={{ opacity: 1, x: 0 }} 
                               exit={{ opacity: 0, x: -20 }} 
-                              className="glass p-5 md:p-12 lg:p-16 relative min-h-[300px] md:min-h-[500px] rounded-2xl md:rounded-3xl overflow-hidden"
+                              className="glass p-6 md:p-12 lg:p-16 relative min-h-[350px] md:min-h-[500px] rounded-2xl md:rounded-3xl overflow-hidden"
                             >
                               <div className="relative z-10">
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 md:mb-8">
@@ -811,7 +928,7 @@ export default function App() {
       <footer className="relative z-10 p-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
         <div className="text-slate-500 text-[10px] md:text-xs tracking-widest font-medium uppercase">&copy; 2026 Kailan G. Lima.</div>
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
-          <button onClick={() => window.location.pathname = '/private'} className="text-slate-500 hover:text-white transition-colors text-[10px] uppercase tracking-widest font-bold">Acesso Admin</button>
+          <button onClick={() => window.location.hash = '#/private'} className="text-slate-500 hover:text-white transition-colors text-[10px] uppercase tracking-widest font-bold cursor-pointer">Acesso Admin</button>
           <div className="w-1 h-1 bg-slate-800 rounded-full hidden md:block" />
           <div className="text-slate-400 font-serif italic text-xs md:text-sm">"O sentido é uma variável não operacional."</div>
         </div>
