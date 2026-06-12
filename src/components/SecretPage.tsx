@@ -750,8 +750,8 @@ Para uma rotina sufocante, você deixa tudo mais leve.
 Lembra que isso já foi escrito? procure na sua memória .
 
 Para soar diferente eu juntei os fragmentos, 
+Fique aqui, não se afaste, não restará revolta.
 venha pra cá, no seu momento, te livrarei desses tormentos.
-Fique aqui, não se afaste, 
 O cansaço nem me bate quando você está em volta.`}
                 </p>
               </div>
