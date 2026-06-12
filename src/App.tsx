@@ -18,6 +18,7 @@ import {
 } from 'firebase/firestore';
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import Markdown from 'react-markdown';
+import SecretPage from './components/SecretPage';
 
 // --- Types & Constants ---
 
@@ -720,7 +721,11 @@ export default function App() {
   const [activePhilosSection, setActivePhilosSection] = useState(PHILOSOPHY_SECTIONS[0].id);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const philisSectionScrollRef = useRef<HTMLDivElement>(null);
+ const isSecret = window.location.pathname === '/secret';
 
+  if (isSecret) {
+    return <SecretPage />;
+  }
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
     window.addEventListener('mousemove', handleMouseMove);
